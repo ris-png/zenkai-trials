@@ -1,0 +1,15 @@
+BATTLE FLOW:
+
+1. Initialize battle state
+2. Apply passive abilities
+3. Start round
+4. Add mana to all units
+5. Sort turn order by speed
+6. Loop through each unit:
+   - Skip if dead
+   - Player selects action for player-controlled unit; AI selects action for boss-controlled unit
+   - Resolve action
+   - Apply damage/effects
+   - Update state
+7. Check win condition
+8. Repeat next round

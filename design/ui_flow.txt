@@ -1,0 +1,34 @@
+UI FLOW:
+
+1. Home Screen
+- Start button
+- Collection button
+- Settings button (optional?)
+
+2. Game Mode Selection Screen
+- Choose game mode
+- Show difficulty or mode description
+
+3. Team Selection Screen
+- Choose 1 to 3 characters
+- Show selected team
+
+4. Battle Screen
+- Show boss
+- Show player team
+- Show stats, turn order, and actions/logs
+
+5. Result Screen
+- Win or loss
+- Rewards / XP gained
+
+6. Character Collection Screen
+- View owned characters
+- View stats, rarity, element, and skills
+
+ASSET INFORMATION 
+- Character cards are 750×1050 px rounded corners
+- Boss art is 1050×750 px rounded corners
+- As of now: asset art only shows character photo.
+- Future: will update cards to show: stars, element, name, passive ability description, anime 
+- Battle screen should preserve the full card aspect ratio

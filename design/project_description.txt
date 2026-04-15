@@ -1,0 +1,37 @@
+PROJECT: Zenkai Trials
+
+GAME TYPE:
+Anime-style turn-based card battle game for the web.
+
+STARTING ACCOUNT RULE:
+- Each user gets a random 3,4,5 star character when they login
+
+CORE LOOP:
+- Player selects 1 to 3 characters
+- Player fights 1 boss
+- Battle is turn-based
+- Turn order is based on speed
+- Characters use attacks, skills, block, or dodge
+- Characters and bosses use elemental strengths/weaknesses
+- Characters level from 1 to 100
+- Characters have rarity from 3-star to 5-star
+- 5-star characters are generally stronger than 4-star, and 4-star stronger than 3-star
+- Bosses are assigned by difficulty depending on game mode
+
+UI: 
+
+VISUAL STYLE:
+- Anime card game
+- Characters use custom card art assets made by me
+- Characters come from different anime franchises, so each character should have an anime category/franchise field
+
+STACK:
+- Next.js
+- React
+- TypeScript
+- Tailwind
+- Zustand
+- Supabase
+
+GOAL:
+Build a modular foundation for the game so I can easily add more characters, bosses, skills, and game modes later.

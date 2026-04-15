@@ -1,0 +1,11 @@
+BOSS AI BEHAVIOR:
+
+RULES:
+1. Check if Ultimate can be used
+   - If yes, use Ultimate
+2. Else check if Skill 1 can be used
+   - If yes, use Skill 1
+3. Else use Basic Attack
+
+TARGET:
+- Choose 1 random living enemy. re-check for valid targets after a player dies during the round.

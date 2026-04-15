@@ -1,0 +1,42 @@
+SKILL RULES:
+
+- Every character has exactly:
+  - 1 Basic Attack
+  - 1 Skill 1
+  - 1 Skill 2 (Ultimate)
+
+- No character has fewer or more skills
+
+DESIGN PRINCIPLE:
+- Skills are not limited by lore accuracy
+- If a character lacks known abilities, create generic but themed skills
+
+SCALING BY RARITY:
+- 3★:
+  - Simple damage skills
+  - Minimal effects
+
+- 4★:
+  - Damage + small effects (buff, debuff, minor utility)
+
+- 5★:
+  - Damage + advanced effects (stun, multi-hit, defense break, etc.)
+
+NAMING:
+- Use lore-based names when possible
+- Otherwise use themed names (e.g. “Shadow Strike”, “Energy Burst”)
+
+GOAL:
+- Keep gameplay consistent across all characters
+- Ensure every character feels complete and usable
+
+THEMING RULE:
+- Generic skills should match:
+  - Character element
+  - Character archetype
+  - Visual style of the character
+
+Example:
+- Fire character → explosive or burn-based names
+- Fast character → slash, dash, strike
+- Tank → guard, smash, impact

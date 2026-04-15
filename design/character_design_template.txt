@@ -1,0 +1,83 @@
+CHARACTER STAT GENERATION RULES:
+
+RARITY:
+- 3-star = lower stat budget
+- 4-star = medium stat budget
+- 5-star = highest stat budget
+
+BASE STAT BUDGET BY RARITY:
+- 3-star: 1800 to 2200 total stat points
+- 4-star: 2300 to 2800 total stat points
+- 5-star: 2900 to 3500 total stat points
+
+STATS TO DISTRIBUTE:
+- HP
+- ATK
+- DEF
+- SPEED
+
+*Each level increases HP,ATK,DEF and SPEED by small intervals. store per-level growth values per character.
+
+DISTRIBUTION LOGIC:
+- Fast/agile characters get more speed, lower defense
+- Tank characters get more HP and defense
+- Power characters get more attack
+- Lore should influence stat weighting, not just random values
+
+RULE:
+- Randomization should stay inside controlled ranges so characters feel unique but still balanced
+
+
+CHARACTER TEMPLATE:
+
+NAME:
+ANIME:
+RARITY: (3, 4, 5 stars)
+ELEMENT:
+
+ARCHETYPE:
+- Fighter / Tank / Assassin / Support / Balanced
+
+LEVEL RANGE:
+- Starts at level 1 (max 100)
+
+STATS (base at level 1):
+- HP:
+- ATK:
+- DEF:
+- SPEED:
+
+MANA:
+- Start:
+- Max:
+
+PASSIVE ABILITY:
+- Name:
+- Effect:
+- Target: (Self / Team / Enemy)
+- Example: "Increases team ATK by 5%"
+
+SKILLS:
+
+1. BASIC ATTACK
+- Name:
+- Damage:
+- Effect: (optional)
+
+2. SKILL 1
+- Name:
+- Mana Cost:
+- Damage:
+- Effect: (e.g. stun, burn, buff)
+
+3. SKILL 2 (ULTIMATE)
+- Name:
+- Mana Cost:
+- Damage:
+- Effect:
+
+LORE TAGS:
+- (optional: fast, defensive, leader, etc)
+
+DESCRIPTION:
+- Short character description (optional)

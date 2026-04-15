@@ -1,0 +1,77 @@
+BATTLE SYSTEM:
+
+MATCH FORMAT:
+- Player can bring 1 to 3 characters
+- Enemy side has 1 boss
+- Battle ends when all player characters are defeated or the boss is defeated
+
+TURN ORDER:
+- At the start of each round, all living units gain mana
+- Then all living units are sorted by speed (highest to lowest)
+- If there is a speed tie, player units act before enemy units
+- Each living unit takes 1 action per round
+
+ELEMENTS:
+- Earth, Water, Fire, Air, Lightning, Light, Dark
+
+ELEMENT RELATIONSHIPS:
+- Earth > Water
+- Water > Fire
+- Fire > Air
+- Air > Lightning
+- Lightning > Earth
+- Light > Dark
+- Dark > Light
+- Light and Dark are neutral against Earth, Water, Fire, Air, Lightning
+
+ELEMENT MULTIPLIERS:
+- Strong = 1.20
+- Weak = 0.80
+- Neutral = 1.00
+
+ACTIONS:
+- Basic Attack: 0 mana
+- Skill 1: low mana cost, medium damage
+- Skill 2 (Ultimate): high mana cost, high damage
+- Dodge: 0 mana, coin flip → success = 0 damage, fail = full damage
+- Block: 0 mana → take 20% damage, cannot dodge next turn
+
+MANA:
+- Start: 150
+- Gain per round: 150
+- Max: 600
+
+CRITICAL HIT:
+- 3.5% chance
+- Critical hit multiplies final damage by 1.50
+
+DAMAGE FORMULA:
+Final Damage = Base Damage × Element Multiplier × Crit Modifier × Block Modifier
+
+SPEED:
+- Range: 100 to 1000
+- Higher speed acts first
+
+PASSIVE ABILITIES:
+- Each character has 1 passive ability
+- Passives may be battle passives or reward passives. 
+Reward passives apply only after battle
+- - Battle passives remain active only while their source character is alive
+- Passive abilities can affect:
+  - Self
+  - Team (all allies)
+  - Enemy (rare cases)
+
+Examples:
+- +5% team attack
+- +10% self speed
+- +5% team XP gain (xp gain applies post battle)
+- Reduce incoming damage by 5%
+- Increase crit chance by 2%
+
+SPECIAL RULES:
+- Dead characters cannot act
+- A blocked character cannot use dodge on the next turn
+- Dodge only affects the next incoming damage instance
+- Mana cannot exceed max
+- Passive effects stack additively unless specified otherwise

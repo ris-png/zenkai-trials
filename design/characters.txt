@@ -1,0 +1,360 @@
+CHARACTER DATA
+
+NAME: Maki Zenin
+ANIME: Jujutsu Kaisen
+RARITY: 4
+ELEMENT: Fire
+
+ARCHETYPE: Fighter
+
+STATS (base at level 1):
+- HP: 3400
+- ATK: 460
+- DEF: 300
+- SPEED: 520
+
+MANA:
+- Start: 150
+- Max: 600
+
+PASSIVE ABILITY:
+- Name: Heavenly Restriction
+- Effect: Increases own ATK by 8%
+- Target: Self
+
+SKILLS:
+1. BASIC ATTACK
+- Name: Polearm Strike
+- Damage: 470
+
+2. SKILL 1
+- Name: Cursed Weapon Combo
+- Mana Cost: 220
+- Damage: 1120
+- Effect: 20% chance to apply ATK Down (10%, 2 turns)
+
+3. SKILL 2 (ULTIMATE)
+- Name: Firebrand Cleave
+- Mana Cost: 500
+- Damage: 2050
+- Effect: Applies Burn (damage per turn defined here; 2 turns)
+
+
+NAME: Geto Suguru
+ANIME: Jujutsu Kaisen
+RARITY: 4
+ELEMENT: Dark
+
+ARCHETYPE: Support
+
+STATS:
+- HP: 3600
+- ATK: 420
+- DEF: 330
+- SPEED: 480
+
+MANA:
+- Start: 150
+- Max: 600
+
+PASSIVE:
+- Name: Curse Manipulation
+- Effect: Increases team DEF by 5%
+- Target: Team
+
+SKILLS:
+1. BASIC ATTACK
+- Name: Spirit Lash
+- Damage: 470
+
+2. SKILL 1
+- Name: Curse Bind
+- Mana Cost: 220
+- Damage: 1050
+- Effect: 25% chance to Stun (1 turn)
+
+3. SKILL 2
+- Name: Curse Swarm
+- Mana Cost: 500
+- Damage: 1950
+- Effect: Applies Poison (per skill values, stackable)
+
+
+NAME: Gojo Satoru
+ANIME: Jujutsu Kaisen
+RARITY: 5
+ELEMENT: Light
+
+ARCHETYPE: Balanced
+
+STATS:
+- HP: 4300
+- ATK: 520
+- DEF: 320
+- SPEED: 750
+
+MANA:
+- Start: 150
+- Max: 600
+
+PASSIVE:
+- Name: Infinity
+- Effect: Reduces incoming damage by 8%
+- Target: Self
+
+SKILLS:
+1. BASIC ATTACK
+- Name: Limitless Strike
+- Damage: 470
+
+2. SKILL 1
+- Name: Blue
+- Mana Cost: 220
+- Damage: 1200
+- Effect: Reduces target SPEED by 30% (2 turns)
+
+3. SKILL 2
+- Name: Hollow Purple
+- Mana Cost: 500
+- Damage: 2150
+- Effect: Ignores 25% DEF
+
+
+NAME: Nanao Ise
+ANIME: Bleach
+RARITY: 3
+ELEMENT: Light
+
+ARCHETYPE: Support
+
+STATS:
+- HP: 3000
+- ATK: 340
+- DEF: 320
+- SPEED: 420
+
+MANA:
+- Start: 150
+- Max: 600
+
+PASSIVE:
+- Name: Tactical Mind
+- Effect: Increases team DEF by 3%
+- Target: Team
+
+SKILLS:
+1. BASIC ATTACK
+- Name: Staff Strike
+- Damage: 470
+
+2. SKILL 1
+- Name: Barrier Chant
+- Mana Cost: 200
+- Damage: 900
+- Effect: Grants Shield (value defined here)
+
+3. SKILL 2
+- Name: Light Seal
+- Mana Cost: 450
+- Damage: 1700
+- Effect: 15% chance to Stun
+
+
+NAME: Riruka Dokugamine
+ANIME: Bleach
+RARITY: 3
+ELEMENT: Earth
+
+ARCHETYPE: Utility
+
+STATS:
+- HP: 2900
+- ATK: 330
+- DEF: 310
+- SPEED: 460
+
+MANA:
+- Start: 150
+- Max: 600
+
+PASSIVE:
+- Name: Dollhouse
+- Effect: Increases team SPEED by 3%
+- Target: Team
+
+SKILLS:
+1. BASIC ATTACK
+- Name: Object Strike
+- Damage: 470
+
+2. SKILL 1
+- Name: Trap Box
+- Mana Cost: 200
+- Damage: 880
+- Effect: 20% chance to apply SPEED Down (2 turns)
+
+3. SKILL 2
+- Name: Collapse Room
+- Mana Cost: 450
+- Damage: 1700
+- Effect: Reduces enemy mana by 15%
+
+
+NAME: Ulquiorra Cifer
+ANIME: Bleach
+RARITY: 4
+ELEMENT: Dark
+
+ARCHETYPE: Assassin
+
+STATS:
+- HP: 3300
+- ATK: 480
+- DEF: 280
+- SPEED: 640
+
+MANA:
+- Start: 150
+- Max: 600
+
+PASSIVE:
+- Name: Segunda Etapa
+- Effect: Increases own crit chance by 3%
+- Target: Self
+
+SKILLS:
+1. BASIC ATTACK
+- Name: Cero Strike
+- Damage: 470
+
+2. SKILL 1
+- Name: Lanza
+- Mana Cost: 220
+- Damage: 1150
+- Effect: 20% chance to apply DEF Down (10%, 2 turns)
+
+3. SKILL 2
+- Name: Cero Oscuras
+- Mana Cost: 500
+- Damage: 2050
+- Effect: Lifesteal (20% of damage dealt)
+
+
+NAME: Shizue Izawa
+ANIME: Reincarnated as a Slime
+RARITY: 3
+ELEMENT: Fire
+
+ARCHETYPE: Fighter
+
+STATS:
+- HP: 3000
+- ATK: 360
+- DEF: 290
+- SPEED: 440
+
+MANA:
+- Start: 150
+- Max: 600
+
+PASSIVE:
+- Name: Flame Control
+- Effect: Increases own ATK by 5%
+- Target: Self
+
+SKILLS:
+1. BASIC ATTACK
+- Name: Flame Strike
+- Damage: 470
+
+2. SKILL 1
+- Name: Fire Slash
+- Mana Cost: 200
+- Damage: 920
+- Effect: Applies Burn (2 turns)
+
+3. SKILL 2
+- Name: Inferno Burst
+- Mana Cost: 450
+- Damage: 1700
+- Effect: AOE damage (reduced per-target if needed)
+
+
+NAME: Shion
+ANIME: Reincarnated as a Slime
+RARITY: 4
+ELEMENT: Lightning
+
+ARCHETYPE: Tank
+
+STATS:
+- HP: 4000
+- ATK: 430
+- DEF: 380
+- SPEED: 400
+
+MANA:
+- Start: 150
+- Max: 600
+
+PASSIVE:
+- Name: Berserker Body
+- Effect: Reduces incoming damage by 5%
+- Target: Self
+
+SKILLS:
+1. BASIC ATTACK
+- Name: Heavy Cleave
+- Damage: 470
+
+2. SKILL 1
+- Name: Thunder Guard
+- Mana Cost: 220
+- Damage: 1000
+- Effect: Grants Shield
+
+3. SKILL 2
+- Name: Storm Breaker
+- Mana Cost: 500
+- Damage: 2000
+- Effect: Applies Shock (50% speed reduction, 2 turns)
+
+
+NAME: Rimuru Tempest
+ANIME: Reincarnated as a Slime
+RARITY: 5
+ELEMENT: Water
+
+ARCHETYPE: Support
+
+STATS:
+- HP: 4100
+- ATK: 480
+- DEF: 350
+- SPEED: 650
+
+MANA:
+- Start: 150
+- Max: 600
+
+PASSIVE:
+- Name: Predator
+- Effect: Restores 3% HP after each action
+- Target: Self
+
+SKILLS:
+1. BASIC ATTACK
+- Name: Water Blade
+- Damage: 470
+
+2. SKILL 1
+- Name: Absorb
+- Mana Cost: 220
+- Damage: 1100
+- Effect: Heals self for 20% of damage dealt
+
+3. SKILL 2
+- Name: Gluttony Storm
+- Mana Cost: 500
+- Damage: 2100
+- Effect: Removes one buff (cleanse enemy buff)

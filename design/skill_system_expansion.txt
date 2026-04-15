@@ -1,0 +1,91 @@
+- Any secondary effect whose target differs from the main skill target must explicitly define its own target
+
+SKILL EFFECT TYPES:
+
+DAMAGE:
+- Single target damage
+- Multi-hit attacks
+- Area (AOE) damage
+
+STATUS EFFECTS:
+
+Stun:
+- Target cannot act on their next turn
+- Duration: 1 turn
+- Cannot stack
+
+Burn:
+- Deals damage over time each turn
+- Duration: defined per skill
+- Does not stack (refreshes duration if applied again)
+
+Freeze:
+- Reduces speed by 30%
+- Target acts last in the next round
+- Duration: 1 turn
+- Cannot stack
+
+Shock:
+- Reduces speed by 50%
+- Duration: 2 turns
+- Does not stack (refreshes duration)
+
+Poison:
+- Deals damage over time based on % of max HP
+- Duration: defined per skill
+- Can stack (damage increases per stack)
+
+DEBUFFS:
+
+ATK Down:
+- Reduces attack by a % (defined per skill)
+- Duration: defined per skill
+
+DEF Down:
+- Reduces defense by a % (defined per skill)
+- Duration: defined per skill
+
+SPEED Down:
+- Reduces speed by a % (defined per skill)
+- Duration: defined per skill
+
+BUFFS:
+
+ATK Up:
+- Increases attack by a % (defined per skill)
+- Duration: defined per skill
+
+DEF Up:
+- Increases defense by a % (defined per skill)
+- Duration: defined per skill
+
+SPEED Up:
+- Increases speed by a % (defined per skill)
+- Duration: defined per skill
+
+UTILITY:
+
+Shield:
+- Absorbs incoming damage before HP is reduced
+- Value defined per skill
+- Expires when broken or duration ends
+
+Lifesteal:
+- Heals for a % of damage dealt
+- Applied instantly after damage
+
+Energy Drain:
+- Reduces enemy mana by a % of their current mana
+- Cannot reduce below 0
+
+Energy Boost:
+- Restores mana to self or ally
+- Cannot exceed max mana
+
+Taunt:
+- Forces enemy to target the taunting character
+- Duration: 1 turn
+
+Cleanse:
+- Removes all negative effects
+- Target: single ally or entire team (defined per skill)

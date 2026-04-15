@@ -1,0 +1,85 @@
+ADVENTURE MODE (100 FLOORS):
+
+Core Rules:
+• 3v1 each floor. Full HP/Mana before each floor.
+• Team change allowed between any floor.
+• Repeating a cleared floor gives NO card rewards.
+• Repeating a cleared floor gives reduced XP (less than first clear).
+• Rewards: Cards only on first clear per floor. (any elemental)
+
+Card Rarities:
+3-Star = Common
+4-Star = Rare
+5-Star = Legendary
+
+Normal Floor Drop Rates:
+• 5-Star: 10%
+• 4-Star: 30%
+• 3-Star: 60%
+
+Boss Floor Drop Rates:
+• 5-Star: 60%
+• 4-Star: 30%
+• 3-Star: 10%
+
+Floor 50 and 100 (Final Boss) guarantees a 5-Star card.
+
+Elemental Themes (10-floor blocks):
+
+Floors 1-10:   Earth theme
+Floors 11-20:  Water theme
+Floors 21-30:  Fire theme
+Floors 31-40:  Air theme
+Floors 41-50:  Lightning theme
+Floors 51-60:  Light theme
+Floors 61-70:  Dark theme
+Floors 71-100: Random theme (any element)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DAILY DUNGEON:
+
+Core Rules:
+• One attempt per day per difficulty (Easy / Normal / Hard).
+• 3v1 battle against a themed boss.
+• Card drop rates: Easy = 2.5% / Normal = 4.5% / Hard = 6.5%
+
+Special Rule (Rotating Daily):
+Each day, one random element gets +15% stat boost (HP, Mana, Damage) for enemies and players.
+
+Daily Element Boost Rotation:
+Monday:   Earth +15%
+Tuesday:  Water +15%
+Wednesday: Fire +15%
+Thursday:  Air +15%
+Friday:   Lightning +15%
+Saturday: Light +15%
+Sunday:   Dark +15%
+
+Weekend Bonus (Saturday & Sunday):
+Card drop chance doubles for all difficulties:
+Easy = 5% / Normal = 9% / Hard = 13%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ENDLESS MODE:
+
+Core Rules:
+• 1 entry per day (to limit card drops).
+• Full HP / Full Mana at start.
+• Mana carries over between fights (no reset).
+• Each win = heal each character for 20% of their max HP.
+• Loss condition = all 3 characters reach 0 HP.
+• Endless Mode difficulty scales over time.
+• Card drop: 2% base chance after each win.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+GENERAL NOTES:
+• Difficulty scaling (HP, Mana, Damage, etc) Easy bosses use 0.9x base stats, Normal 1.0x, 
+Hard 1.2x, Floor bosses scale +3% HP and +2% ATK every 5 floors
+• Elemental multipliers (1.20x / 0.80x) still apply.
+• Critical hit (3.5% chance, 1.50x damage) still applies.
+• Speed determines turn order (100-1000 scale).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
