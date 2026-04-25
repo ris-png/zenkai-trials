@@ -73,6 +73,16 @@ Core Rules:
 • Endless Mode difficulty scales over time.
 • Card drop: 2% base chance after each win.
 
+ENDLESS MODE FLOW:
+- Defeating a boss does not end the run
+- After each victory:
+  - grant the post-fight reward
+  - heal each living character for 20% of max HP
+  - keep current mana values
+  - load the next enemy encounter
+  - increment endless progression
+- The run only ends when all player characters are defeated or the player exits the mode
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 GENERAL NOTES:

@@ -1,0 +1,163 @@
+BOSS SYSTEM
+
+PURPOSE:
+- Bosses are enemy units used in PvE game modes
+- Bosses are separate from playable characters
+- Bosses are selected based on game mode, floor, and difficulty
+- Bosses use the same core battle system as characters unless stated otherwise
+
+GENERAL RULES:
+- Bosses fight against 1 to 3 player characters
+- Bosses can use:
+  - 1 Basic Attack
+  - 1 Skill 1
+  - 1 Skill 2 (Ultimate)
+  - Passive Ability
+- Bosses follow the same turn-order, mana, crit, and element rules as the main battle system
+- Bosses may have higher HP and stronger scaling than playable characters
+- Bosses may use unique skill effects and encounter effects if explicitly defined
+
+BOSS DIFFERENCES FROM CHARACTERS:
+- Bosses are not collectible cards
+- Bosses do not use rarity stars like playable characters
+- Bosses are assigned by:
+  - Game mode
+  - Encounter difficulty
+  - Floor or stage
+- Bosses can have larger HP pools and stronger stats than normal characters
+- Bosses can be built to function as:
+  - Damage dealers
+  - Tanks
+  - Control bosses
+  - Balanced bosses
+
+STAT GUIDELINES:
+- Bosses should generally have higher HP than playable characters
+- Boss offensive and defensive stats should scale based on difficulty
+- Boss speed should still remain within the game speed system unless explicitly stated otherwise
+- Boss stat balance should fit their intended role
+
+DIFFICULTY SCALING:
+- Easy boss = 0.9x base boss stats
+- Normal boss = 1.0x base boss stats
+- Hard boss = 1.2x base boss stats
+- Floor bosses can scale further depending on floor progression
+- Final bosses may have custom stat scaling if explicitly defined
+
+BOSS AI:
+- Bosses use the boss AI behavior file unless a boss has unique AI rules
+- Default boss behavior:
+  1. If Ultimate can be used, use Ultimate
+  2. Else if Skill 1 can be used, use Skill 1
+  3. Else use Basic Attack
+- Boss targets 1 random living enemy unless skill logic says otherwise
+- Boss re-checks valid targets after a player dies during the round
+
+MANA RULES:
+- Bosses use the same mana system as the main battle system unless a specific boss overrides it
+- Default boss mana:
+  - Start: 150
+  - Gain per round: 150
+  - Max: 600
+
+PASSIVE ABILITIES:
+- Bosses can have 1 passive ability
+- Boss passives are active only while the boss is alive
+- Boss passives may affect:
+  - Self
+  - All enemies
+  - All player characters
+- If a boss passive uses a custom rule, it must be explicitly written in the boss data
+
+ENCOUNTER EFFECTS:
+- Bosses may optionally have encounter-specific effects
+- Encounter effects are special rules that apply only during that boss fight
+- These must be explicitly defined per boss
+- Examples:
+  - All player fire damage reduced by 10%
+  - Boss gains shield every 3 rounds
+  - Boss gains ATK Up below 30% HP
+- If no encounter effect is defined, the boss uses only normal battle rules
+
+TARGETING RULES:
+- Boss skills may target:
+  - Single enemy
+  - All enemies
+  - Self
+- If a secondary effect has a different target than the main skill target, that effect must explicitly define its own target
+
+STATUS EFFECT RULES:
+- Bosses use the same status system as player characters
+- Boss skills can apply status effects if explicitly defined
+- Bosses can also receive status effects unless a boss-specific immunity is explicitly defined
+
+BOSS DATA TEMPLATE:
+
+NAME:
+ANIME:
+ELEMENT:
+DIFFICULTY:
+- Easy / Normal / Hard / Floor Boss / Final Boss / Custom
+
+ROLE:
+- Fighter / Tank / Assassin / Mage / Controller / Balanced
+
+LEVEL:
+- Encounter level
+
+ASSET:
+- Boss art uses 1050x750 px rounded-corner asset
+
+STATS:
+- HP:
+- ATK:
+- DEF:
+- SPEED:
+
+MANA:
+- Start:
+- Max:
+
+PASSIVE ABILITY:
+- Name:
+- Effect:
+- Target:
+- Description:
+
+SKILLS:
+
+1. BASIC ATTACK
+- Name:
+- Damage:
+- Effect: optional
+
+2. SKILL 1
+- Name:
+- Mana Cost:
+- Damage:
+- Effect:
+
+3. SKILL 2 (ULTIMATE)
+- Name:
+- Mana Cost:
+- Damage:
+- Effect:
+
+ENCOUNTER EFFECT:
+- Name: optional
+- Effect: optional
+- Trigger Condition: optional
+
+DESCRIPTION:
+- Short boss identity and gameplay description
+
+DESIGN RULES:
+- Bosses should feel stronger than standard units without breaking the core system
+- Bosses should have a clear gameplay identity
+- Bosses should not rely on hidden rules
+- Any special mechanic must be explicitly written in the boss data
+- Boss behavior should remain readable and testable
+
+GOAL:
+- Keep bosses modular, scalable, and easy to author
+- Allow adding new bosses without changing the battle engine

@@ -5,16 +5,23 @@ import {
   initializeBattle,
   resolveTurn,
   startRound,
+  type BattleParticipantInput,
   type BattleActionSelection,
 } from "../../lib/battle/engine";
-import type { BattleActionType, BattleState, BattleUnitState } from "../../types/battle";
-import type { Character, Skill } from "../../types/character";
+import type {
+  BattleActionType,
+  BattleLogEntry,
+  BattleState,
+  BattleUnitState,
+} from "../../types/battle";
+import type { Skill } from "../../types/character";
 import type { StatusEffect } from "../../types/effects";
-import { BattleUnitCard } from "./cards";
+import { BattleArtwork } from "./battle-art";
+import { BattleUnitCard, type BattleUnitMotionState } from "./cards";
 
 interface BattleScreenProps {
-  players: Character[];
-  boss: Character;
+  players: BattleParticipantInput[];
+  boss: BattleParticipantInput;
   modeLabel: string;
   onComplete: (state: BattleState) => void;
   onExit: () => void;
@@ -29,6 +36,13 @@ interface UnitSnapshot {
 
 const AUTO_STEP_DELAY_MS = 700;
 const MAX_LOG_LINES = 80;
+const MOTION_DURATIONS_MS: Record<keyof BattleUnitMotionState, number> = {
+  lunge: 240,
+  hit: 300,
+  flash: 220,
+  shield: 420,
+  ultimate: 520,
+};
 
 export function BattleScreen({
   players,
@@ -40,27 +54,43 @@ export function BattleScreen({
   const [battleState, setBattleState] = useState<BattleState | null>(null);
   const [logLines, setLogLines] = useState<string[]>([]);
   const [isAutoResolving, setIsAutoResolving] = useState(false);
+  const [unitMotionMap, setUnitMotionMap] = useState<Record<string, BattleUnitMotionState>>(
+    {},
+  );
   const completionSentRef = useRef(false);
-  const randomRef = useRef(createSeededRandom(players.length * 997 + boss.name.length * 131));
+  const motionTimersRef = useRef<number[]>([]);
+  const randomRef = useRef(
+    createSeededRandom(players.length * 997 + boss.character.name.length * 131),
+  );
 
   useEffect(() => {
     const initialState = initializeBattle({
       battleId: `ui-${Date.now()}`,
-      players: players.map((character) => ({ character })),
-      boss: { character: boss },
+      players,
+      boss,
     });
 
     completionSentRef.current = false;
-    randomRef.current = createSeededRandom(players.length * 997 + boss.name.length * 131);
+    randomRef.current = createSeededRandom(
+      players.length * 997 + boss.character.name.length * 131,
+    );
     setBattleState(initialState);
     setIsAutoResolving(false);
+    clearMotionTimers();
+    setUnitMotionMap({});
     setLogLines([
       `${modeLabel} battle ready.`,
-      `Team: ${players.map((character) => character.name).join(", ")}`,
-      `Boss: ${boss.name}`,
+      `Team: ${players.map((participant) => participant.character.name).join(", ")}`,
+      `Boss: ${boss.character.name}`,
       "Round 1 will begin automatically.",
     ]);
   }, [boss, modeLabel, players]);
+
+  useEffect(() => {
+    return () => {
+      clearMotionTimers();
+    };
+  }, []);
 
   useEffect(() => {
     if (!battleState) {
@@ -99,10 +129,11 @@ export function BattleScreen({
         const nextState = resolveTurn(battleState, undefined, {
           random: randomRef.current,
         });
+        const resolvedAction = getLatestActionEntry(battleState, nextState);
 
         commitStateTransition(battleState, nextState, [
           `${activeUnit.name} takes a turn.`,
-        ]);
+        ], resolvedAction?.action);
       }, AUTO_STEP_DELAY_MS);
 
       return () => window.clearTimeout(timer);
@@ -127,6 +158,7 @@ export function BattleScreen({
     previousState: BattleState,
     nextState: BattleState,
     contextLines: string[] = [],
+    actionType?: BattleActionType,
   ) {
     const nextLines = [
       ...contextLines,
@@ -146,6 +178,7 @@ export function BattleScreen({
       nextLines.push("Defeat. The boss wins this encounter.");
     }
 
+    triggerTransitionMotion(previousState, nextState, actionType);
     setBattleState(nextState);
     setLogLines((current) => [...current, ...nextLines].slice(-MAX_LOG_LINES));
   }
@@ -167,21 +200,104 @@ export function BattleScreen({
 
     commitStateTransition(currentBattleState, nextState, [
       `${activeUnit.name} uses ${actionLabel}.`,
-    ]);
+    ], actionType);
+  }
+
+  function clearMotionTimers() {
+    for (const timer of motionTimersRef.current) {
+      window.clearTimeout(timer);
+    }
+
+    motionTimersRef.current = [];
+  }
+
+  function queueUnitMotion(unitId: string, motion: keyof BattleUnitMotionState) {
+    setUnitMotionMap((current) => ({
+      ...current,
+      [unitId]: {
+        ...current[unitId],
+        [motion]: true,
+      },
+    }));
+
+    const timer = window.setTimeout(() => {
+      setUnitMotionMap((current) => {
+        const nextMotion = { ...current[unitId], [motion]: false };
+        const hasActiveMotion = Object.values(nextMotion).some(Boolean);
+
+        if (!hasActiveMotion) {
+          const { [unitId]: removedMotion, ...rest } = current;
+          void removedMotion;
+          return rest;
+        }
+
+        return {
+          ...current,
+          [unitId]: nextMotion,
+        };
+      });
+
+      motionTimersRef.current = motionTimersRef.current.filter(
+        (activeTimer) => activeTimer !== timer,
+      );
+    }, MOTION_DURATIONS_MS[motion]);
+
+    motionTimersRef.current.push(timer);
+  }
+
+  function triggerTransitionMotion(
+    previousState: BattleState,
+    nextState: BattleState,
+    explicitActionType?: BattleActionType,
+  ) {
+    const previousSnapshot = snapshotUnits(previousState);
+    const latestAction =
+      explicitActionType ?? getLatestActionEntry(previousState, nextState)?.action;
+    const actorUnitId = previousState.activeUnitId;
+
+    if (
+      actorUnitId &&
+      (latestAction === "basicAttack" ||
+        latestAction === "skill1" ||
+        latestAction === "skill2")
+    ) {
+      queueUnitMotion(actorUnitId, "lunge");
+
+      if (latestAction === "skill2") {
+        queueUnitMotion(actorUnitId, "ultimate");
+      }
+    }
+
+    for (const unit of [...nextState.playerUnits, ...nextState.enemyUnits]) {
+      const before = previousSnapshot[unit.unitId];
+
+      if (!before) {
+        continue;
+      }
+
+      if (unit.currentHp < before.hp) {
+        queueUnitMotion(unit.unitId, "hit");
+        queueUnitMotion(unit.unitId, "flash");
+      }
+
+      if (unit.shield > before.shield) {
+        queueUnitMotion(unit.unitId, "shield");
+      }
+    }
   }
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-[30px] border border-white/70 bg-white/80 p-5 shadow-[0_18px_44px_rgba(15,23,42,0.08)] backdrop-blur-sm">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+    <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-4 overflow-hidden">
+      <div className="rounded-[30px] border border-white/70 bg-white/80 px-5 py-4 shadow-[0_18px_44px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               {modeLabel}
             </p>
-            <h2 className="mt-2 text-3xl font-semibold text-slate-900">
+            <h2 className="mt-1.5 text-2xl font-semibold text-slate-900 lg:text-3xl">
               Battle Screen
             </h2>
-            <p className="mt-2 max-w-2xl text-sm text-slate-600">
+            <p className="mt-1.5 max-w-2xl text-sm text-slate-600">
               A minimal playable battle loop using the existing turn engine and
               character data.
             </p>
@@ -197,27 +313,41 @@ export function BattleScreen({
         </div>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-        <div className="space-y-6">
+      <div className="grid min-h-0 gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,24rem)] 2xl:grid-cols-[minmax(0,1.25fr)_minmax(22rem,26rem)]">
+        <div className="grid min-h-0 gap-4 grid-rows-[minmax(0,0.9fr)_minmax(0,1fr)]">
           <BossBattlePanel
             unit={currentBattleState.enemyUnits[0]}
             active={activeUnit?.unitId === currentBattleState.enemyUnits[0]?.unitId}
+            motion={unitMotionMap[currentBattleState.enemyUnits[0]?.unitId ?? ""]}
           />
 
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {currentBattleState.playerUnits.map((unit) => (
-              <BattleUnitCard
-                key={unit.unitId}
-                unit={unit}
-                active={activeUnit?.unitId === unit.unitId}
-              />
-            ))}
+          <div className="min-h-0 rounded-[30px] border border-white/70 bg-white/75 p-3 shadow-[0_18px_44px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+            <div
+              className={`grid h-full gap-3 ${
+                currentBattleState.playerUnits.length === 1
+                  ? "grid-cols-1"
+                  : currentBattleState.playerUnits.length === 2
+                    ? "grid-cols-2"
+                    : "grid-cols-3"
+              }`}
+            >
+              {currentBattleState.playerUnits.map((unit) => (
+                <BattleUnitCard
+                  key={unit.unitId}
+                  unit={unit}
+                  compact
+                  active={activeUnit?.unitId === unit.unitId}
+                  motion={unitMotionMap[unit.unitId]}
+                  className="h-full min-h-0"
+                />
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="space-y-6">
-          <InfoPanel title="Round Status">
-              <div className="grid grid-cols-2 gap-3 text-sm text-slate-700">
+        <div className="grid min-h-0 gap-4 grid-rows-[auto_auto_auto_minmax(0,1fr)]">
+          <InfoPanel title="Round Status" compact>
+            <div className="grid grid-cols-2 gap-2.5 text-sm text-slate-700">
               <InfoPill label="Round" value={String(currentBattleState.round)} />
               <InfoPill label="Phase" value={currentBattleState.phase} />
               <InfoPill
@@ -231,7 +361,7 @@ export function BattleScreen({
             </div>
           </InfoPanel>
 
-          <InfoPanel title="Turn Order">
+          <InfoPanel title="Turn Order" compact>
             <div className="space-y-2">
               {currentBattleState.turnOrder.length > 0 ? (
                 currentBattleState.turnOrder.map((unitId, index) => {
@@ -244,7 +374,7 @@ export function BattleScreen({
                   return (
                     <div
                       key={unitId}
-                      className={`flex items-center justify-between rounded-2xl px-4 py-3 text-sm ${
+                      className={`flex items-center justify-between rounded-2xl px-3 py-2.5 text-sm ${
                         unitId === currentBattleState.activeUnitId
                           ? "bg-sky-100 text-sky-900"
                           : "bg-slate-50 text-slate-700"
@@ -263,7 +393,7 @@ export function BattleScreen({
             </div>
           </InfoPanel>
 
-          <InfoPanel title="Actions">
+          <InfoPanel title="Actions" compact>
             {activeUnit?.side === "player" ? (
               <div className="space-y-3">
                 <p className="text-sm text-slate-600">
@@ -271,7 +401,7 @@ export function BattleScreen({
                     ? `Choose an action for ${activeUnit.name}.`
                     : "Please wait for auto-resolve or round setup to finish."}
                 </p>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2.5">
                   <ActionButton
                     label={activeUnit.skills.basicAttack.name}
                     detail="Basic Attack"
@@ -313,12 +443,12 @@ export function BattleScreen({
             )}
           </InfoPanel>
 
-          <InfoPanel title="Battle Log">
-            <div className="max-h-[28rem] space-y-2 overflow-y-auto pr-1 text-sm text-slate-600">
+          <InfoPanel title="Battle Log" compact className="min-h-0" bodyClassName="mt-3 min-h-0 flex-1 overflow-hidden">
+            <div className="h-full min-h-0 space-y-2 overflow-y-auto pr-1 text-sm text-slate-600">
               {logLines.map((line, index) => (
                 <div
                   key={`${index}-${line}`}
-                  className="rounded-2xl bg-slate-50 px-4 py-3"
+                  className="rounded-2xl bg-slate-50 px-3.5 py-3"
                 >
                   {line}
                 </div>
@@ -540,6 +670,16 @@ function createSeededRandom(seed: number): () => number {
   };
 }
 
+function getLatestActionEntry(
+  previousState: BattleState,
+  nextState: BattleState,
+): BattleLogEntry | undefined {
+  return nextState.combatLog
+    .slice(previousState.combatLog.length)
+    .reverse()
+    .find((entry) => entry.actorUnitId === previousState.activeUnitId);
+}
+
 function ActionButton({
   label,
   detail,
@@ -556,9 +696,9 @@ function ActionButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="rounded-[22px] border border-slate-200 bg-white px-4 py-3 text-left transition hover:border-sky-300 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-45"
+      className="rounded-[22px] border border-slate-200 bg-white px-3.5 py-3 text-left transition hover:border-sky-300 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-45"
     >
-      <p className="font-medium text-slate-900">{label}</p>
+      <p className="text-sm font-medium text-slate-900">{label}</p>
       <p className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">
         {detail}
       </p>
@@ -569,14 +709,26 @@ function ActionButton({
 function InfoPanel({
   title,
   children,
+  compact = false,
+  className = "",
+  bodyClassName = "",
 }: {
   title: string;
   children: React.ReactNode;
+  compact?: boolean;
+  className?: string;
+  bodyClassName?: string;
 }) {
   return (
-    <section className="rounded-[28px] border border-white/70 bg-white/80 p-5 shadow-[0_18px_44px_rgba(15,23,42,0.08)] backdrop-blur-sm">
-      <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
-      <div className="mt-4">{children}</div>
+    <section
+      className={`flex min-h-0 flex-col rounded-[28px] border border-white/70 bg-white/80 shadow-[0_18px_44px_rgba(15,23,42,0.08)] backdrop-blur-sm ${
+        compact ? "p-4" : "p-5"
+      } ${className}`}
+    >
+      <h3 className={`${compact ? "text-base" : "text-lg"} font-semibold text-slate-900`}>
+        {title}
+      </h3>
+      <div className={`${compact ? "mt-3" : "mt-4"} ${bodyClassName}`}>{children}</div>
     </section>
   );
 }
@@ -595,47 +747,69 @@ function InfoPill({ label, value }: { label: string; value: string }) {
 function BossBattlePanel({
   unit,
   active,
+  motion,
 }: {
   unit: BattleUnitState;
   active: boolean;
+  motion?: BattleUnitMotionState;
 }) {
   const hpPercent = unit.maxHp > 0 ? (unit.currentHp / unit.maxHp) * 100 : 0;
   const manaPercent = unit.maxMana > 0 ? (unit.currentMana / unit.maxMana) * 100 : 0;
 
   return (
     <div
-      className={`overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-[0_18px_44px_rgba(15,23,42,0.08)] ${
+      className={`battle-card-shell relative h-full overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-[0_18px_44px_rgba(15,23,42,0.08)] ${
         active ? "ring-2 ring-sky-400 ring-offset-2 ring-offset-[#eef4fb]" : ""
-      }`}
+      } ${motion?.lunge ? "battle-motion-lunge" : ""} ${
+        motion?.hit ? "battle-motion-hit" : ""
+      } ${motion?.ultimate ? "battle-motion-ultimate" : ""}`}
     >
-      <div className="aspect-[7/5] bg-gradient-to-br from-slate-900 via-slate-700 to-slate-400 p-4">
-        <div className="flex h-full flex-col justify-between rounded-[24px] border border-white/20 bg-white/10 p-5 text-white backdrop-blur-md">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-white/70">
-                Boss
-              </p>
-              <h3 className="mt-2 text-3xl font-semibold">{unit.name}</h3>
-              <p className="mt-2 text-sm text-white/75">
-                Element {unit.element} | Speed {unit.currentStats.speed}
-              </p>
+      {motion?.flash ? (
+        <div className="battle-impact-flash pointer-events-none absolute inset-0 z-20" />
+      ) : null}
+      {motion?.shield ? (
+        <div className="battle-shield-pulse pointer-events-none absolute inset-2 z-20 rounded-[26px]" />
+      ) : null}
+      <div className="battle-idle-boss relative flex h-full items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-slate-700 to-slate-400 p-3">
+        <BattleArtwork
+          entity={{ id: unit.characterId, name: unit.name }}
+          variant="boss"
+          alt={`${unit.name} boss artwork`}
+          priority
+          imageClassName="scale-[1.03]"
+          overlayClassName="bg-gradient-to-t from-black/12 via-transparent to-black/18"
+        />
+        <div className="aspect-[7/5] w-full max-h-full">
+          <div className="relative z-10 flex h-full min-h-0 flex-col justify-between rounded-[24px] border border-white/18 p-4 text-white">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.24em] text-white/72 drop-shadow-[0_1px_4px_rgba(15,23,42,0.6)]">
+                  Boss
+                </p>
+                <h3 className="mt-2 text-2xl font-semibold drop-shadow-[0_2px_10px_rgba(15,23,42,0.72)] lg:text-3xl">
+                  {unit.name}
+                </h3>
+                <p className="mt-1.5 text-sm text-white/82 drop-shadow-[0_1px_3px_rgba(15,23,42,0.55)]">
+                  Element {unit.element} | Speed {unit.currentStats.speed}
+                </p>
+              </div>
+              <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">
+                {unit.element}
+              </span>
             </div>
-            <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">
-              {unit.element}
-            </span>
-          </div>
 
-          <div className="space-y-3">
-            <BossMeter
-              label={`HP ${unit.currentHp}/${unit.maxHp}`}
-              value={hpPercent}
-              barClassName="bg-gradient-to-r from-rose-400 to-orange-300"
-            />
-            <BossMeter
-              label={`Mana ${unit.currentMana}/${unit.maxMana}`}
-              value={manaPercent}
-              barClassName="bg-gradient-to-r from-cyan-300 to-sky-200"
-            />
+            <div className="space-y-2.5 rounded-[20px] border border-white/18 bg-slate-950/14 p-3 shadow-[0_10px_30px_rgba(15,23,42,0.18)] backdrop-blur-[8px]">
+              <BossMeter
+                label={`HP ${unit.currentHp}/${unit.maxHp}`}
+                value={hpPercent}
+                barClassName="bg-gradient-to-r from-rose-400 to-orange-300"
+              />
+              <BossMeter
+                label={`Mana ${unit.currentMana}/${unit.maxMana}`}
+                value={manaPercent}
+                barClassName="bg-gradient-to-r from-cyan-300 to-sky-200"
+              />
+            </div>
           </div>
         </div>
       </div>

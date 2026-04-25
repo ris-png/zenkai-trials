@@ -57,6 +57,8 @@ export interface BattleParticipantInput {
   character: Character;
   level?: number;
   unitId?: string;
+  currentHp?: number;
+  currentMana?: number;
 }
 
 export interface InitializeBattleParams {
@@ -339,10 +341,10 @@ function createBattleUnitState(
     baseStats: leveledStats,
     currentStats: leveledStats,
     maxHp: leveledStats.hp,
-    currentHp: leveledStats.hp,
+    currentHp: clampToRange(participant.currentHp ?? leveledStats.hp, 0, leveledStats.hp),
     maxMana: participant.character.mana.max || rules.maxMana,
     currentMana: clampMana(
-      participant.character.mana.start,
+      participant.currentMana ?? participant.character.mana.start,
       participant.character.mana.max || rules.maxMana,
     ),
     passiveAbility: participant.character.passiveAbility,
